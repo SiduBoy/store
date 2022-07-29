@@ -3,10 +3,7 @@ package com.jyb.store.service.impl;
 import com.jyb.store.entity.User;
 import com.jyb.store.mapper.UserMapper;
 import com.jyb.store.service.IUserService;
-import com.jyb.store.service.ex.InsertException;
-import com.jyb.store.service.ex.PasswordNotMatchException;
-import com.jyb.store.service.ex.UserNotFoundException;
-import com.jyb.store.service.ex.UsernameDuplicatedException;
+import com.jyb.store.service.ex.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -86,6 +83,26 @@ public class UserServiceImpl implements IUserService {
 
         //将当前的用户数据返回，返回的目的是为了辅助其他页面做展示
         return result;
+    }
+
+    @Override
+    public void changePassword(Integer uid, String username, String oldPassword, String newPassword) {
+        User byUid = userMapper.findByUid(uid);
+        if (uid == null || byUid.getIsDelete()==1) {
+            throw new UserNotFoundException("用户数据不存在");
+        }
+        //原始密码和数据库中的方法比较
+        String md5OldPassword = getMD5Password(oldPassword, byUid.getSalt());
+        if (!md5OldPassword.equals(byUid.getPassword())) {
+            throw new PasswordNotMatchException("原始密码错误");
+        }
+        //将行的密码设置到数据库中，将新的密码进行加密再去更新
+        String md5NewPassword = getMD5Password(newPassword, byUid.getSalt());
+        Integer rows = userMapper.updatePasswordByUid(uid, md5NewPassword, username, new Date());
+        if (rows != 1) {
+            throw new UpdateException("修改密码未知异常");
+        }
+        System.out.println("修改成功");
     }
 
     private String getMD5Password(String oldPassword ,String yanzhi){

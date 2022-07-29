@@ -37,4 +37,9 @@ public class UserServiceTests {
         }
 
     }
+
+    @Test
+    public void changePassword(){
+        iUserService.changePassword(14,"小王","321","123");
+    }
 }

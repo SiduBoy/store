@@ -74,4 +74,20 @@ public class UserController extends BaseController{
 
         return new JsonResult<User>(ok,data);
     }
+
+    /**
+     * 修改密码
+     * @param oldPassword 原密码
+     * @param newPassword 新密码
+     * @param session 前端全局对象
+     * @return json
+     */
+    @RequestMapping("change_password")
+    public  JsonResult<Void> changePassword(String oldPassword,String newPassword,HttpSession session){
+        userService.changePassword(getuidFromSession(session),
+                getUsernameFromSession(session),
+                oldPassword,
+                newPassword);
+        return new JsonResult<>(ok);
+    }
 }

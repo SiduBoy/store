@@ -21,14 +21,17 @@ public class BaseController {
             result.setState(4000);
             result.setMessage("用户名被占用");
         }else if(e instanceof UserNotFoundException){
-            result.setState(5001);
+            result.setState(4001);
             result.setMessage("用户不存在");
         }else if(e instanceof PasswordNotMatchException){
-            result.setState(5002);
+            result.setState(4002);
             result.setMessage("密码错误");
         }else if(e instanceof InsertException){
             result.setState(5000);
             result.setMessage("注册时未知异常");
+        }else if(e instanceof UpdateException) {
+            result.setState(5001);
+            result.setMessage("更新数据时未知异常");
         }
         return result;
     }

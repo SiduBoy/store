@@ -1,4 +1,5 @@
 package com.jyb.store.mapper;
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,11 +21,26 @@ public interface UserMapper {
      */
     User findUserName(String username);
 
-    Integer updateByUsername(@Param("updated")User updated,@Param("username")String username);
+    /**
+     * 根据id修改密码
+     * @param uid id
+     * @param password 新密码
+     * @param modifiedUser 修改执行者
+     * @param modifiedTime 时间
+     * @return 受影响行数
+     */
+    Integer updatePasswordByUid(Integer uid,
+                                String password,
+                                String modifiedUser,
+                                Date modifiedTime);
 
-	Integer deleteByUsername(@Param("username")String username);
+    /**
+     * id查对象
+     * @param uid 已有id
+     * @return 对象
+     */
+    User findByUid(Integer uid);
 
-	List<User> selectAllByUsername(@Param("username")String username);
 
 
 }
